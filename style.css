@@ -1,0 +1,227 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #000;
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+    height: 100vh;
+    cursor: none;
+}
+
+#startBtn {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px 80px;
+    font-size: 3rem;
+    border: 5px solid #0f0;
+    background: #000;
+    color: #0f0;
+    transition: 0.5s;
+    cursor: pointer;
+    z-index: 10000;
+}
+
+#startBtn:hover {
+    background: #0f0;
+    color: #000;
+    box-shadow: 0 0 60px #0f0;
+}
+
+#typewriter,
+#subtext,
+#trollNote {
+    position: absolute;
+    width: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+#typewriter {
+    top: 12%;
+    font-size: 2.4rem;
+}
+
+#subtext {
+    top: 34%;
+    font-size: 2rem;
+}
+
+#trollNote {
+    top: 78%;
+    font-size: 2.2rem;
+    color: #f66;
+}
+
+#buttons {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 120px;
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 100;
+}
+
+.btn {
+    padding: 30px 90px;
+    font-size: 3rem;
+    border: 5px solid;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.no {
+    background: #001100;
+    border-color: #0f0;
+    color: #0f0;
+}
+
+.yes {
+    background: #110000;
+    border-color: #f00;
+    color: #f00;
+}
+
+.yes.glow {
+    box-shadow: 0 0 100px #f00;
+    transform: scale(1.25);
+}
+
+#emergencyLights {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+    background: radial-gradient(circle at 5% 5%, #f003 10%, transparent 12%),
+        radial-gradient(circle at 95% 5%, #f003 10%, transparent 12%),
+        radial-gradient(circle at 5% 95%, #f003 10%, transparent 12%),
+        radial-gradient(circle at 95% 95%, #f003 10%, transparent 12%);
+    animation: spin 3s linear infinite;
+    z-index: 999;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#whiteOverlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 998;
+}
+
+#scratchCanvas {
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    cursor: pointer;
+    z-index: 500;
+}
+
+#secretContent {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    z-index: 100;
+    pointer-events: none;
+}
+
+#qrCode {
+    max-width: 280px;
+    margin: 30px 0;
+    border: 10px solid #0ff;
+    box-shadow: 0 0 50px #0ff;
+}
+
+.final-note {
+    font-size: 1.8rem;
+    margin: 40px 0;
+    text-align: center;
+    color: #0ff;
+    animation: glow 3s infinite;
+}
+
+@keyframes glow {
+    0%, 100% {
+        text-shadow: 0 0 20px #0ff;
+        opacity: 1;
+    }
+    50% {
+        text-shadow: 0 0 70px #0ff;
+        opacity: 0.3;
+    }
+}
+
+.password-box {
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.password-text {
+    color: #0f0;
+}
+
+#copyBtn {
+    padding: 15px 40px;
+    background: #0f0;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.5rem;
+    transition: 0.3s;
+}
+
+#copyBtn:hover {
+    background: #0c0;
+    box-shadow: 0 0 20px #0f0;
+}
+
+@keyframes vibrate {
+    0%, 100% {
+        transform: translate(0);
+    }
+    20%, 60% {
+        transform: translate(-25px, 20px);
+    }
+    40%, 80% {
+        transform: translate(25px, -20px);
+    }
+}
+
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
