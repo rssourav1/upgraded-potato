@@ -5,223 +5,228 @@
 }
 
 body {
-    background: #000;
+    background-color: #000;
     color: #0f0;
     font-family: 'Courier New', monospace;
     overflow: hidden;
     height: 100vh;
+    width: 100vw;
     cursor: none;
+    position: relative;
 }
 
-#startBtn {
-    position: fixed;
+/* Start Button */
+#startButton {
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 30px 80px;
     font-size: 3rem;
-    border: 5px solid #0f0;
-    background: #000;
+    font-weight: bold;
     color: #0f0;
-    transition: 0.5s;
+    background-color: #000;
+    border: 5px solid #0f0;
     cursor: pointer;
-    z-index: 10000;
+    transition: all 0.4s ease;
+    z-index: 1000;
 }
 
-#startBtn:hover {
-    background: #0f0;
+#startButton:hover {
+    background-color: #0f0;
     color: #000;
-    box-shadow: 0 0 60px #0f0;
+    box-shadow: 0 0 50px #0f0, 0 0 100px #0f0;
 }
 
-#typewriter,
-#subtext,
-#trollNote {
+/* Typewriter Text */
+.typewriter-text {
     position: absolute;
-    width: 90%;
     left: 50%;
     transform: translateX(-50%);
+    width: 85%;
     text-align: center;
+    font-size: 2.2rem;
+    color: #0f0;
     opacity: 0;
     transition: opacity 0.5s;
 }
 
-#typewriter {
-    top: 12%;
-    font-size: 2.4rem;
+#firstText {
+    top: 15%;
 }
 
-#subtext {
-    top: 34%;
+#secondText {
+    top: 35%;
+}
+
+#trollText {
+    top: 75%;
+    color: #f33;
     font-size: 2rem;
 }
 
-#trollNote {
-    top: 78%;
-    font-size: 2.2rem;
-    color: #f66;
-}
-
-#buttons {
+/* Buttons Container */
+#buttonsContainer {
     position: absolute;
     top: 55%;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 120px;
+    gap: 100px;
     opacity: 0;
-    transition: opacity 0.5s;
-    z-index: 100;
+    transition: opacity 0.6s;
 }
 
-.btn {
-    padding: 30px 90px;
-    font-size: 3rem;
-    border: 5px solid;
+.game-button {
+    padding: 25px 70px;
+    font-size: 2.5rem;
+    font-weight: bold;
+    border: 4px solid;
     cursor: pointer;
-    transition: 0.4s;
+    transition: all 0.3s ease;
 }
 
-.no {
-    background: #001100;
-    border-color: #0f0;
+.green-button {
+    background-color: #001a00;
     color: #0f0;
+    border-color: #0f0;
 }
 
-.yes {
-    background: #110000;
-    border-color: #f00;
+.red-button {
+    background-color: #1a0000;
     color: #f00;
+    border-color: #f00;
 }
 
-.yes.glow {
-    box-shadow: 0 0 100px #f00;
-    transform: scale(1.25);
+.red-button.glow {
+    box-shadow: 0 0 80px #f00, 0 0 120px #f00;
+    transform: scale(1.2);
 }
 
-#emergencyLights {
+/* Green Button Animation */
+@keyframes vibrate {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-8px, 8px); }
+    20% { transform: translate(8px, -8px); }
+    30% { transform: translate(-8px, -8px); }
+    40% { transform: translate(8px, 8px); }
+    50% { transform: translate(-8px, 8px); }
+    60% { transform: translate(8px, -8px); }
+    70% { transform: translate(-8px, -8px); }
+    80% { transform: translate(8px, 8px); }
+    90% { transform: translate(-8px, 8px); }
+}
+
+.vibrating {
+    animation: vibrate 0.5s ease-in-out;
+}
+
+/* Emergency Lights */
+.emergency-light {
     position: fixed;
-    inset: 0;
-    pointer-events: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     opacity: 0;
+    pointer-events: none;
+    background: 
+        radial-gradient(circle at 10% 10%, rgba(255, 0, 0, 0.4) 8%, transparent 10%),
+        radial-gradient(circle at 90% 10%, rgba(255, 0, 0, 0.4) 8%, transparent 10%),
+        radial-gradient(circle at 10% 90%, rgba(255, 0, 0, 0.4) 8%, transparent 10%),
+        radial-gradient(circle at 90% 90%, rgba(255, 0, 0, 0.4) 8%, transparent 10%);
+    z-index: 500;
     transition: opacity 0.5s;
-    background: radial-gradient(circle at 5% 5%, #f003 10%, transparent 12%),
-        radial-gradient(circle at 95% 5%, #f003 10%, transparent 12%),
-        radial-gradient(circle at 5% 95%, #f003 10%, transparent 12%),
-        radial-gradient(circle at 95% 95%, #f003 10%, transparent 12%);
-    animation: spin 3s linear infinite;
-    z-index: 999;
 }
 
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.emergency-light.active {
+    opacity: 1;
+    animation: rotate-lights 2s linear infinite;
 }
 
-#whiteOverlay {
-    position: fixed;
-    inset: 0;
-    background: #000;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 998;
+@keyframes rotate-lights {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
+/* Scratch Canvas */
 #scratchCanvas {
     position: fixed;
-    inset: 0;
-    opacity: 0;
-    pointer-events: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     cursor: pointer;
-    z-index: 500;
+    display: none;
+    z-index: 400;
 }
 
-#secretContent {
+/* Reveal Content */
+#revealContent {
     position: fixed;
-    inset: 0;
-    display: flex;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    z-index: 100;
-    pointer-events: none;
+    z-index: 300;
 }
 
-#qrCode {
-    max-width: 280px;
-    margin: 30px 0;
-    border: 10px solid #0ff;
-    box-shadow: 0 0 50px #0ff;
+#qrImage {
+    width: 280px;
+    height: auto;
+    border: 8px solid #0ff;
+    box-shadow: 0 0 40px #0ff, 0 0 80px #0ff;
+    margin-bottom: 40px;
 }
 
-.final-note {
+#instructionText {
     font-size: 1.8rem;
-    margin: 40px 0;
-    text-align: center;
     color: #0ff;
-    animation: glow 3s infinite;
+    text-align: center;
+    line-height: 1.8;
+    margin-bottom: 50px;
+    opacity: 0;
+    animation: fadeGlow 4s ease-in-out infinite;
 }
 
-@keyframes glow {
+@keyframes fadeGlow {
     0%, 100% {
-        text-shadow: 0 0 20px #0ff;
-        opacity: 1;
+        opacity: 0.3;
+        text-shadow: 0 0 10px #fff;
     }
     50% {
-        text-shadow: 0 0 70px #0ff;
-        opacity: 0.3;
+        opacity: 1;
+        text-shadow: 0 0 30px #fff, 0 0 50px #fff;
     }
 }
 
-.password-box {
-    font-size: 2.5rem;
+#passwordSection {
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 25px;
 }
 
-.password-text {
+#passwordText {
+    font-size: 2.2rem;
     color: #0f0;
+    font-weight: bold;
 }
 
-#copyBtn {
-    padding: 15px 40px;
-    background: #0f0;
+#copyButton {
+    padding: 12px 35px;
+    font-size: 1.6rem;
+    font-weight: bold;
+    background-color: #0f0;
     color: #000;
     border: none;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 1.5rem;
-    transition: 0.3s;
+    transition: all 0.3s ease;
 }
 
-#copyBtn:hover {
-    background: #0c0;
+#copyButton:hover {
+    background-color: #0c0;
     box-shadow: 0 0 20px #0f0;
-}
-
-@keyframes vibrate {
-    0%, 100% {
-        transform: translate(0);
-    }
-    20%, 60% {
-        transform: translate(-25px, 20px);
-    }
-    40%, 80% {
-        transform: translate(25px, -20px);
-    }
-}
-
-@keyframes fadeInOut {
-    0%, 100% {
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
-}
+                        }
