@@ -7,39 +7,49 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="startBtn">CLICK TO BEGIN</div>
+    <!-- Start Button -->
+    <div id="startButton">CLICK TO BEGIN</div>
 
-    <div id="typewriter"></div>
-    <div id="subtext"></div>
-    <div id="trollNote"></div>
+    <!-- Typewriter Text -->
+    <div id="firstText" class="typewriter-text"></div>
+    <div id="secondText" class="typewriter-text"></div>
+    <div id="trollText" class="typewriter-text troll"></div>
 
-    <div id="buttons">
-        <button id="noBtn" class="btn no">NO</button>
-        <button id="yesBtn" class="btn yes">YES</button>
+    <!-- Buttons Container -->
+    <div id="buttonsContainer">
+        <button id="greenBtn" class="game-button green-button">NO</button>
+        <button id="redBtn" class="game-button red-button">YES</button>
     </div>
 
-    <div id="emergencyLights"></div>
-    <div id="whiteOverlay"></div>
+    <!-- Emergency Lights -->
+    <div id="emergencyLights" class="emergency-light"></div>
 
+    <!-- Scratch Canvas -->
     <canvas id="scratchCanvas"></canvas>
 
-    <div id="secretContent">
-        <img src="qrcode.png" alt="QR Code" id="qrCode">
-        <p class="final-note" id="finalNote">
+    <!-- Final Reveal Content -->
+    <div id="revealContent">
+        <img src="qrcode.png" alt="QR Code" id="qrImage">
+        <p id="instructionText">
             Use a laptop or desktop for the best experience.<br>
             Mobile? → three dots → "Desktop site" → reload.
         </p>
-        <div class="password-box">
-            <span class="password-text">Password: 20.11.2001</span>
-            <button id="copyBtn">Copy</button>
+        <div id="passwordSection">
+            <span id="passwordText">Password: 20.11.2001</span>
+            <button id="copyButton">Copy</button>
         </div>
     </div>
 
+    <!-- Audio Files -->
     <audio id="bgMusic" loop>
         <source src="backgroundmusic.mp3" type="audio/mpeg">
     </audio>
-    <audio id="typeSound" src="keyboard.mp3"></audio>
-    <audio id="siren" src="siren.mp3"></audio>
+    <audio id="typingSound">
+        <source src="keyboard.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sirenSound">
+        <source src="siren.mp3" type="audio/mpeg">
+    </audio>
 
     <script src="script.js"></script>
 </body>
