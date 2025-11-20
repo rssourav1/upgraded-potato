@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Behind the Darkness</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="startBtn">CLICK TO BEGIN</div>
+
+    <div id="typewriter"></div>
+    <div id="subtext"></div>
+    <div id="trollNote"></div>
+
+    <div id="buttons">
+        <button id="noBtn" class="btn no">NO</button>
+        <button id="yesBtn" class="btn yes">YES</button>
+    </div>
+
+    <div id="emergencyLights"></div>
+    <div id="whiteOverlay"></div>
+
+    <canvas id="scratchCanvas"></canvas>
+
+    <div id="secretContent">
+        <img src="qrcode.png" alt="QR Code" id="qrCode">
+        <p class="final-note" id="finalNote">
+            Use a laptop or desktop for the best experience.<br>
+            Mobile? → three dots → "Desktop site" → reload.
+        </p>
+        <div class="password-box">
+            <span class="password-text">Password: 20.11.2001</span>
+            <button id="copyBtn">Copy</button>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="backgroundmusic.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="typeSound" src="keyboard.mp3"></audio>
+    <audio id="siren" src="siren.mp3"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
