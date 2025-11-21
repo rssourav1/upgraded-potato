@@ -28,7 +28,7 @@ startButton.addEventListener('click', () => {
     
     // Start typewriter sequence
     typeText(
-        "Why are you here? Do you want to know what lies behind the darkness?",
+        "Do you want to know what's lies behind the darkness?",
         firstText,
         () => {
             typeText(
@@ -73,15 +73,30 @@ function handleGreenButton(event) {
     event.preventDefault();
     greenAttempts++;
     
-    // Random position (avoiding edges)
-    const maxX = window.innerWidth - 300;
-    const maxY = window.innerHeight - 150;
-    const randomX = Math.random() * (maxX - 100) + 50;
-    const randomY = Math.random() * (maxY - 100) + 50;
+    // Get button actual dimensions
+    const btnRect = greenBtn.getBoundingClientRect();
+    const btnWidth = btnRect.width;
+    const btnHeight = btnRect.height;
+    
+    // Calculate very safe boundaries with extra padding
+    const padding = 50; // Extra safe margin
+    const minX = padding;
+    const maxX = window.innerWidth - btnWidth - padding;
+    const minY = padding;
+    const maxY = window.innerHeight - btnHeight - padding;
+    
+    // Ensure we have valid range
+    const safeMaxX = Math.max(minX + 100, maxX);
+    const safeMaxY = Math.max(minY + 100, maxY);
+    
+    // Random position within very safe boundaries
+    const randomX = Math.random() * (safeMaxX - minX) + minX;
+    const randomY = Math.random() * (safeMaxY - minY) + minY;
     
     greenBtn.style.position = 'fixed';
     greenBtn.style.left = randomX + 'px';
     greenBtn.style.top = randomY + 'px';
+    greenBtn.style.transform = 'none'; // Remove any transform
     
     // Vibrate animation
     greenBtn.classList.add('vibrating');
@@ -124,21 +139,20 @@ redBtn.addEventListener('click', () => {
         sirenSound.currentTime = 0;
     }, 6000);
     
-    // After 6 seconds, fade out lights and show scratch canvas
+    // After 6 seconds, fade out lights and transition to scratch
     setTimeout(() => {
         emergencyLights.classList.remove('active');
+        emergencyLights.style.opacity = '0';
         
+        // Wait for lights to fade, then prepare scratch canvas
         setTimeout(() => {
-            initializeScratchCanvas();
-        }, 500);
+            prepareScratchCanvas();
+        }, 600);
     }, 6000);
 });
 
 // ========== PHASE 5: Scratch Canvas ==========
-function initializeScratchCanvas() {
-    scratchCanvas.style.display = 'block';
-    revealContent.style.display = 'flex';
-    
+function prepareScratchCanvas() {
     const canvas = scratchCanvas;
     const ctx = canvas.getContext('2d');
     
@@ -167,51 +181,147 @@ function initializeScratchCanvas() {
         
         // Set composite mode for erasing
         ctx.globalCompositeOperation = 'destination-out';
+        
+        // Now fade in the canvas VERY slowly
+        canvas.style.display = 'block';
+        canvas.style.opacity = '0';
+        
+        // Very slow fade in over 8 seconds
+        let opacity = 0;
+        const fadeInterval = setInterval(() => {
+            opacity += 0.00125; // Very small increment for slow fade
+            canvas.style.opacity = opacity;
+            
+            if (opacity >= 1) {
+                clearInterval(fadeInterval);
+                // Enable scratch after fade completes
+                enableScratch(canvas, ctx);
+                // Show reveal content underneath
+                revealContent.style.display = 'flex';
+            }
+        }, 10);
     };
     coverImage.src = 'scratchcover.jpeg';
-    
-    // Scratch functionality
+}
+
+function enableScratch(canvas, ctx) {
     let isScratching = false;
     
-    canvas.addEventListener('mousedown', () => isScratching = true);
+    // Mouse events
+    canvas.addEventListener('mousedown', (e) => {
+        if (!isPixelTransparent(ctx, e.clientX, e.clientY)) {
+            isScratching = true;
+        }
+    });
+    
     canvas.addEventListener('mouseup', () => isScratching = false);
     canvas.addEventListener('mouseleave', () => isScratching = false);
     
     canvas.addEventListener('mousemove', (e) => {
         if (isScratching) {
-            scratch(e.clientX, e.clientY);
+            scratch(ctx, e.clientX, e.clientY);
         }
     });
     
+    // Click event for pass-through
+    canvas.addEventListener('click', (e) => {
+        if (isPixelTransparent(ctx, e.clientX, e.clientY)) {
+            // Temporarily disable pointer events to let click pass through
+            canvas.style.pointerEvents = 'none';
+            const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+            if (elementBelow) {
+                elementBelow.click();
+            }
+            // Re-enable after a short delay
+            setTimeout(() => {
+                canvas.style.pointerEvents = 'auto';
+            }, 10);
+        }
+    });
+    
+    // Touch events
     canvas.addEventListener('touchstart', (e) => {
-        isScratching = true;
+        e.preventDefault();
         const touch = e.touches[0];
-        scratch(touch.clientX, touch.clientY);
+        if (!isPixelTransparent(ctx, touch.clientX, touch.clientY)) {
+            isScratching = true;
+            scratch(ctx, touch.clientX, touch.clientY);
+        } else {
+            // Pass through touch to element below
+            canvas.style.pointerEvents = 'none';
+            const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (elementBelow) {
+                elementBelow.click();
+            }
+            setTimeout(() => {
+                canvas.style.pointerEvents = 'auto';
+            }, 10);
+        }
     });
     
     canvas.addEventListener('touchmove', (e) => {
         e.preventDefault();
         if (isScratching) {
             const touch = e.touches[0];
-            scratch(touch.clientX, touch.clientY);
+            scratch(ctx, touch.clientX, touch.clientY);
         }
     });
     
     canvas.addEventListener('touchend', () => isScratching = false);
-    
-    function scratch(x, y) {
-        ctx.beginPath();
-        ctx.arc(x, y, 50, 0, Math.PI * 2);
-        ctx.fill();
+}
+
+// Check if pixel at position is transparent (already scratched)
+function isPixelTransparent(ctx, x, y) {
+    try {
+        const pixel = ctx.getImageData(x, y, 1, 1).data;
+        return pixel[3] < 50; // Alpha channel < 50 means transparent/scratched
+    } catch (e) {
+        return false;
     }
+}
+
+function scratch(ctx, x, y) {
+    ctx.beginPath();
+    ctx.arc(x, y, 50, 0, Math.PI * 2);
+    ctx.fill();
 }
 
 // ========== PHASE 6: Copy Button ==========
 copyButton.addEventListener('click', () => {
-    navigator.clipboard.writeText('20.11.2001').then(() => {
+    const password = '20.11.2001';
+    
+    // Try modern clipboard API first
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(password).then(() => {
+            copyButton.textContent = 'Copied!';
+            setTimeout(() => {
+                copyButton.textContent = 'Copy';
+            }, 2000);
+        }).catch(err => {
+            console.error('Clipboard failed:', err);
+            fallbackCopy(password);
+        });
+    } else {
+        fallbackCopy(password);
+    }
+});
+
+// Fallback copy method
+function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand('copy');
         copyButton.textContent = 'Copied!';
         setTimeout(() => {
             copyButton.textContent = 'Copy';
         }, 2000);
-    });
-});
+    } catch (err) {
+        console.error('Fallback copy failed:', err);
+    }
+    document.body.removeChild(textarea);
+}
